@@ -17,3 +17,17 @@ print ("y = " + str(train_set_y[:, index]) + ", it's a '" + classes[np.squeeze(t
 m_train = train_set_x_orig.shape[0]
 m_test = test_set_x_orig.shape[0]
 num_px = train_set_x_orig.shape[2]
+
+train_set_x_flatten = train_set_x_orig.reshape(train_set_x_orig.shape[0], -1).T
+test_set_x_flatten = test_set_x_orig.reshape(test_set_x_orig.shape[0], -1).T
+
+train_set_x = train_set_x_flatten / 255.
+test_set_x = test_set_x_flatten / 255.
+
+def sigmoid(z):
+    s = 1/(1+np.exp(-z))
+    return s
+def initialize_with_zeros(dim):
+    w = np.zeros([dim,1])
+    b = 0.0
+    return w, b
