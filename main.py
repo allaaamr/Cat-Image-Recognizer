@@ -73,8 +73,6 @@ def optimize(w, b, X, Y, num_iterations=100, learning_rate=0.009, print_cost=Fal
              "db": db}
 
     return params, grads, costs
-# GRADED FUNCTION: predict
-
 def predict(w, b, X):
     m = X.shape[1]
     Y_prediction = np.zeros((1, m))
@@ -91,3 +89,30 @@ def predict(w, b, X):
             else:
                 Y_prediction[0][i] = 1
     return Y_prediction
+
+def model(X_train, Y_train, X_test, Y_test, num_iterations=2000, learning_rate=0.5, print_cost=False):
+
+    w, b = initialize_with_zeros(X_train.shape[0])
+    params, grads, costs = optimize(w, b, X_train, Y_train, num_iterations, learning_rate, print_cost)
+
+    w = params["w"]
+    b = params["b"]
+
+    Y_prediction_train = predict(w, b, X_train)
+    Y_prediction_test = predict(w, b, X_test)
+
+    # Print train/test Errors
+    if print_cost:
+        print("train accuracy: {} %".format(100 - np.mean(np.abs(Y_prediction_train - Y_train)) * 100))
+        print("test accuracy: {} %".format(100 - np.mean(np.abs(Y_prediction_test - Y_test)) * 100))
+
+
+    d = {"costs": costs,
+         "Y_prediction_test": Y_prediction_test,
+         "Y_prediction_train" : Y_prediction_train,
+         "w" : w,
+         "b" : b,
+         "learning_rate" : learning_rate,
+         "num_iterations": num_iterations}
+
+    return d
