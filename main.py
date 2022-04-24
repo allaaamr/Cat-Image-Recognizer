@@ -31,3 +31,45 @@ def initialize_with_zeros(dim):
     w = np.zeros([dim,1])
     b = 0.0
     return w, b
+def propagate(w, b, X, Y):
+    m = X.shape[1]
+    # FORWARD PROPAGATION (FROM X TO COST)
+    A = sigmoid(np.dot(w.T,X) + b)
+    cost = -1/m * ((np.dot(Y, np.log(A).T)) + (np.dot((1-Y), np.log(1-A).T)))
+    # BACKWARD PROPAGATION (TO FIND GRAD)
+    dw = 1 / m *(np.dot(X,(A - Y).T))
+    db = 1 / m *(np.sum(A - Y))
+    cost = np.squeeze(np.array(cost))
+    grads = {"dw": dw,
+             "db": db}
+
+    return grads, cost
+def optimize(w, b, X, Y, num_iterations=100, learning_rate=0.009, print_cost=False):
+    w = copy.deepcopy(w)
+    b = copy.deepcopy(b)
+
+    costs = []
+
+    for i in range(num_iterations):
+        grads, cost = propagate(w,b,X,Y)
+
+        dw = grads["dw"]
+        db = grads["db"]
+
+        w = w - learning_rate*dw
+        b = b - learning_rate*db
+        # Record the costs
+        if i % 100 == 0:
+            costs.append(cost)
+
+            # Print the cost every 100 training iterations
+            if print_cost:
+                print ("Cost after iteration %i: %f" %(i, cost))
+
+    params = {"w": w,
+              "b": b}
+
+    grads = {"dw": dw,
+             "db": db}
+
+    return params, grads, costs
